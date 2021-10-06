@@ -13,7 +13,10 @@ const {
     passwordUpdate,
     forgotPassword,
     otpCheak,
-    resetPassword
+    resetPassword,
+    hobiesPasinations,
+    sortByHobiesAccendingOrder,
+    sortByHobiesDecendingOrder
 } = require('../controller/user')
 
 route.get('/all-user',auth,getALl);
@@ -27,5 +30,8 @@ route.put("/password-update/:id",passwordUpdate)
 route.put("/forgot-password/",forgotPassword)
 route.put("/otp-cheak/",otpCheak)
 route.put("/reset-password/",resetPassword)
+route.get("/hobies-pos/:id/:pos",hobiesPasinations),
+route.get("/sort-by-position-assending/:id",sortByHobiesAccendingOrder)
+route.get("/sort-by-position-decending/:id",sortByHobiesDecendingOrder)
 
 module.exports = route

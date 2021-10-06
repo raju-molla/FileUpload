@@ -21,7 +21,21 @@ const userSchema = new Schema({
         unique:true,
         trim:true
     },
+    address: {
+        division: String,
+        district: String,
+        country: {
+            type:String,
+            default: "Bangladesh"
+        }
+    },
     password: String,
+    hobies:[
+        {
+            name:String,
+            position: Number
+        }
+    ],
     image: String,
     otp: '',
     isDelete: {
@@ -38,6 +52,17 @@ userSchema.pre('save', async function(next){
     user.password= hashedPassword;
     next();
 })
+// userSchema.pre('save', async function(next){
+//     let user= this;
+//     let image= req.body.image;
+//     let data= image.split(';base64,');
+//     let base64Data = data[1];
+//     let imgExtension = data[0].split('/')[1];
+//     let fileName = `image${+new Date()}.${imgExtension}`;
+//     let pathName =`${baseUrl}/${fileName}`;
+//     user.image=pathName;
+//     next();
+// })
 
 
 module.exports = mongoose.model('user',userSchema);

@@ -27,12 +27,22 @@ const  getALl = async(req,res)=>{
     }
 }
 
-
+const baseUrl= "http://localhost:30015";
 const register =  async(req,res)=>{
     try{
         // const {password} = req.body;
         // const hashedPassword = await bcrypt.hash(password,10);
         // req.body.password= hashedPassword;
+
+        // image path create
+        let {image}=  req.body;
+        let dataimg = image.split(';base64,');
+        let base64Data= dataimg[1];
+        let imgExtension =dataimg[0].split('/')[1];
+        let fileName=`image${+new Date()}.${imgExtension}`;
+        let pathName= `${baseUrl}/${fileName}`;
+        req.body.image=pathName;
+
         const user = new User(req.body);
         const data =  await user.save();
         return res.status(201).json({
@@ -310,6 +320,74 @@ const resetPassword = async(req,res)=>{
     }
 }
 
+const hobiesPasinations= async(req,res)=>{
+    try{
+        const {id,pos}= req.params;
+        const data= await User.find({_id:id});
+        const value=data[0].hobies;
+        var flag=0;
+        for(var key in value){
+            if(value[key].position==pos){
+                flag=1;
+               return res.json(value[key]);
+            }
+        }
+        if(flag==0){
+            return res.json({
+                mgs: "position is not found!"
+            })
+        }
+  
+
+    }
+    catch(err){
+        return res.json({
+            err
+
+        })
+    }
+}
+const sortByHobiesAccendingOrder= async(req,res)=>{
+    try{
+        const id=req.params.id;
+        const data = await User.find({_id:id})
+        const value= data[0].hobies;
+        console.log(value);
+
+       value.sort((a,b)=>{
+           return a.position-b.position
+       })
+       res.send(value);
+
+    }
+    catch(err){
+        return res.json({
+            err
+        })
+    }
+}
+
+const sortByHobiesDecendingOrder= async(req,res)=>{
+    try{
+        const id=req.params.id;
+        const data = await User.find({_id:id})
+        const value= data[0].hobies;
+        console.log(value);
+
+       value.sort((a,b)=>{
+           return b.position-a.position
+       })
+       res.send(value);
+
+    }
+    catch(err){
+        return res.json({
+            err
+        })
+    }
+}
+
+
 module.exports={
     getALl,
     register,
@@ -321,5 +399,8 @@ module.exports={
     passwordUpdate,
     forgotPassword,
     otpCheak,
-    resetPassword
+    resetPassword,
+    hobiesPasinations,
+    sortByHobiesAccendingOrder,
+    sortByHobiesDecendingOrder
 }
